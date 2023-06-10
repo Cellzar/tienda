@@ -13,6 +13,7 @@ builder.Services.ConfigureRateLimiting();
 // Add services to the container.
 builder.Services.ConfigureCors();
 builder.Services.ConfigureApiVersioning();
+builder.Services.AddJwt(builder.Configuration);
 builder.Services.AddApplicationServices();
 
 builder.Services.AddControllers(options =>
@@ -49,6 +50,7 @@ using (var scope = app.Services.CreateScope())
         var context = services.GetRequiredService<TiendaContext>();
         await context.Database.MigrateAsync();
         await TiendaContextSeed.SeedAsync(context, loggerFactory);
+        await TiendaContextSeed.SeedRolesAsync(context, loggerFactory);
     }
     catch (Exception ex)
     {

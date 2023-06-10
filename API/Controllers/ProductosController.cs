@@ -21,7 +21,6 @@ public class ProductosController : BaseApiController
 
     // GET: api/Productos
     [HttpGet]
-    
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Pager<ProductoListDto>>> Get([FromQuery] Params productoParams)

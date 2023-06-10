@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(TiendaContext))]
-    partial class TiendaContextModelSnapshot : ModelSnapshot
+    [Migration("20230507211432_UsuarioRoles")]
+    partial class UsuarioRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,12 +146,12 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RolId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.HasKey("UsuarioId", "RolId");
+                    b.HasKey("UsuarioId", "RoleId");
 
-                    b.HasIndex("RolId");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("UsuariosRoles");
                 });
@@ -173,23 +176,23 @@ namespace Infrastructure.Data.Migrations
                 });
 
             modelBuilder.Entity("Core.Entities.UsuariosRoles", b =>
-                {
-                    b.HasOne("Core.Entities.Rol", "Rol")
-                        .WithMany("UsuariosRoles")
-                        .HasForeignKey("RolId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("Core.Entities.Rol", "Rol")
+                    .WithMany("UsuariosRoles")
+                    .HasForeignKey("RolId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.HasOne("Core.Entities.Usuario", "Usuario")
-                        .WithMany("UsuariosRoles")
-                        .HasForeignKey("RolId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.HasOne("Core.Entities.Usuario", "Usuario")
+                    .WithMany("UsuariosRoles")
+                    .HasForeignKey("UsuarioId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("Rol");
+                b.Navigation("Rol");
 
-                    b.Navigation("Usuario");
-                });
+                b.Navigation("Usuario");
+            });
 
             modelBuilder.Entity("Core.Entities.Categoria", b =>
                 {
