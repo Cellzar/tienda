@@ -26,5 +26,12 @@ namespace API.Controllers
             var result = await _userService.GetTokenAsync(model);
             return Ok(result);
         }
+
+        [HttpPost("addRole")]
+        public async Task<IActionResult> AddRole(AddRoleDto model)
+        {
+            var result = await _userService.AddRoleAsync(model);
+            return Ok(result);
+        }
     }
 }

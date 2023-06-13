@@ -142,19 +142,19 @@ namespace Infrastructure.Data.Migrations
                 });
 
             modelBuilder.Entity("Core.Entities.UsuariosRoles", b =>
-                {
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
+            {
+                b.Property<int>("UsuarioId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                b.Property<int>("RolId")
+                    .HasColumnType("int");
 
-                    b.HasKey("UsuarioId", "RoleId");
+                b.HasKey("UsuarioId", "RolId");
 
-                    b.HasIndex("RoleId");
+                b.HasIndex("RolId");
 
-                    b.ToTable("UsuariosRoles");
-                });
+                b.ToTable("UsuariosRoles");
+            });
 
             modelBuilder.Entity("Core.Entities.Producto", b =>
                 {

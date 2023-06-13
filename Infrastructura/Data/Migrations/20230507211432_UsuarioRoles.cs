@@ -36,7 +36,7 @@ namespace Infrastructure.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ApellidoPaterno = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ApellidoMaterno = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    ApellidoMaterno = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Username = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -56,20 +56,20 @@ namespace Infrastructure.Data.Migrations
                 columns: table => new
                 {
                     UsuarioId = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false)
+                    RolId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UsuariosRoles", x => new { x.UsuarioId, x.RoleId });
+                    table.PrimaryKey("PK_UsuariosRoles", x => new { x.UsuarioId, x.RolId });
                     table.ForeignKey(
-                        name: "FK_UsuariosRoles_Rol_RoleId",
-                        column: x => x.RoleId,
+                        name: "FK_UsuariosRoles_Rol_RolId",
+                        column: x => x.RolId,
                         principalTable: "Rol",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UsuariosRoles_Usuario_RoleId",
-                        column: x => x.RoleId,
+                        name: "FK_UsuariosRoles_Usuario_UsuarioId",
+                        column: x => x.UsuarioId,
                         principalTable: "Usuario",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -77,12 +77,11 @@ namespace Infrastructure.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UsuariosRoles_RoleId",
+                name: "IX_UsuariosRoles_RolId",
                 table: "UsuariosRoles",
-                column: "RoleId");
+                column: "RolId");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
