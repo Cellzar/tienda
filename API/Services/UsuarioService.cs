@@ -13,13 +13,13 @@ using System.Text;
 
 namespace API.Services;
 
-public class UserService : IUserService
+public class UsuarioService : IUsuarioService
 {
     private readonly JWT _jwt;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordHasher<Usuario> _passwordHasher;
 
-    public UserService(IUnitOfWork unitOfWork, IOptions<JWT> jwt,
+    public UsuarioService(IUnitOfWork unitOfWork, IOptions<JWT> jwt,
         IPasswordHasher<Usuario> passwordHasher)
     {
         _jwt = jwt.Value;

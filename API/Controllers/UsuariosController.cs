@@ -6,9 +6,9 @@ namespace API.Controllers
 {
     public class UsuariosController : BaseApiController
     {
-        private readonly IUserService _userService;
+        private readonly IUsuarioService _userService;
 
-        public UsuariosController(IUserService userService)
+        public UsuariosController(IUsuarioService userService)
         {
             _userService = userService;
         }

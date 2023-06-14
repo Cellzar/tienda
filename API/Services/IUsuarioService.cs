@@ -1,7 +1,7 @@
 ﻿using API.Dtos;
 namespace API.Services;
 
-public interface IUserService
+public interface IUsuarioService
 {
     Task<string> RegisterAsync(RegisterDto model);
     Task<DatosUsuarioDto> GetTokenAsync(LoginDto model);
