@@ -9,23 +9,20 @@ public class ProductoConfiguration : IEntityTypeConfiguration<Producto>
     {
         builder.ToTable("Producto");
         builder.Property(p => p.Id)
-               .IsRequired();
-
+                .IsRequired();
         builder.Property(p => p.Nombre)
-               .IsRequired()
-               .HasMaxLength(100);
-
+                .IsRequired()
+                .HasMaxLength(100);
         builder.Property(p => p.Precio)
-               .HasColumnType("decimal(18,2)");
-
+                .HasColumnType("decimal(18,2)");
 
         builder.HasOne(p => p.Marca)
-               .WithMany(p => p.Productos)
-               .HasForeignKey(p => p.MarcaId);
+                .WithMany(p => p.Productos)
+                .HasForeignKey(p => p.MarcaId);
 
         builder.HasOne(p => p.Categoria)
-               .WithMany(p => p.Productos)
-               .HasForeignKey(p => p.CategoriaId);
+                .WithMany(p => p.Productos)
+                .HasForeignKey(p => p.CategoriaId);
     }
 }
 

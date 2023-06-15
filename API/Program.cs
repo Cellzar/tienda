@@ -9,12 +9,13 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 var logger = new LoggerConfiguration()
-                    .ReadFrom.Configuration(builder.Configuration)
-                    .Enrich.FromLogContext()
-                    .CreateLogger();
+					.ReadFrom.Configuration(builder.Configuration)
+					.Enrich.FromLogContext()
+					.CreateLogger();
 
 //builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
+
 
 builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
 
@@ -22,14 +23,14 @@ builder.Services.ConfigureRateLimiting();
 
 // Add services to the container.
 builder.Services.ConfigureCors();
+builder.Services.AddApplicationServices();
 builder.Services.ConfigureApiVersioning();
 builder.Services.AddJwt(builder.Configuration);
-builder.Services.AddApplicationServices();
 
 builder.Services.AddControllers(options =>
 {
-    options.RespectBrowserAcceptHeader= true;
-    options.ReturnHttpNotAcceptable = true;
+	options.RespectBrowserAcceptHeader = true;
+	options.ReturnHttpNotAcceptable = true;
 }).AddXmlSerializerFormatters();
 
 builder.Services.AddValidationErrors();
@@ -38,7 +39,11 @@ builder.Services.AddDbContext<TiendaContext>(options =>
 {
     string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+
+    //var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
+    //options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), serverVersion);	
 });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -60,20 +65,20 @@ if (app.Environment.IsDevelopment())
 
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    var loggerFactory = services.GetRequiredService<ILoggerFactory>();
-    try
-    {
-        var context = services.GetRequiredService<TiendaContext>();
-        await context.Database.MigrateAsync();
-        await TiendaContextSeed.SeedAsync(context, loggerFactory);
-        await TiendaContextSeed.SeedRolesAsync(context, loggerFactory);
-    }
-    catch (Exception ex)
-    {
-        var _logger = loggerFactory.CreateLogger<Program>();
-        _logger.LogError(ex, "Ocurrió un error durante la migración");
-    }
+	var services = scope.ServiceProvider;
+	var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+	try
+	{
+		var context = services.GetRequiredService<TiendaContext>();
+		await context.Database.MigrateAsync();
+		await TiendaContextSeed.SeedAsync(context, loggerFactory);
+		await TiendaContextSeed.SeedRolesAsync(context, loggerFactory);
+	}
+	catch (Exception ex)
+	{
+		var _logger = loggerFactory.CreateLogger<Program>();
+		_logger.LogError(ex, "Ocurrió un error durante la migración");
+	}
 }
 
 app.UseCors("CorsPolicy");

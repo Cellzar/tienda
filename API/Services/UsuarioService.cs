@@ -69,6 +69,7 @@ public class UsuarioService : IUsuarioService
         }
     }
 
+
     public async Task<DatosUsuarioDto> GetTokenAsync(LoginDto model)
     {
         DatosUsuarioDto datosUsuarioDto = new DatosUsuarioDto();
@@ -94,9 +95,10 @@ public class UsuarioService : IUsuarioService
             datosUsuarioDto.Roles = usuario.Roles
                                             .Select(u => u.Nombre)
                                             .ToList();
-            if(usuario.RefreshTokens.Any(a => a.IsActive))
+
+            if (usuario.RefreshTokens.Any(a => a.IsActive))
             {
-                var activeRefreshToken = usuario.RefreshTokens.Where(a => a.IsActive).FirstOrDefault();
+                var activeRefreshToken = usuario.RefreshTokens.Where(a => a.IsActive == true).FirstOrDefault();
                 datosUsuarioDto.RefreshToken = activeRefreshToken.Token;
                 datosUsuarioDto.RefreshTokenExpiration = activeRefreshToken.Expires;
             }
@@ -119,6 +121,7 @@ public class UsuarioService : IUsuarioService
 
     public async Task<string> AddRoleAsync(AddRoleDto model)
     {
+
         var usuario = await _unitOfWork.Usuarios
                     .GetByUsernameAsync(model.Username);
 
@@ -156,21 +159,6 @@ public class UsuarioService : IUsuarioService
             return $"Rol {model.Role} no encontrado.";
         }
         return $"Credenciales incorrectas para el usuario {usuario.Username}.";
-    }
-
-    private RefreshToken CreateRefreshToken()
-    {
-        var randomNumber = new byte[32];
-        using (var generator = RandomNumberGenerator.Create())
-        {
-            generator.GetBytes(randomNumber);
-            return new RefreshToken
-            {
-                Token = Convert.ToBase64String(randomNumber),
-                Expires = DateTime.UtcNow.AddDays(10),
-                Created = DateTime.UtcNow
-            };
-        }
     }
 
     public async Task<DatosUsuarioDto> RefreshTokenAsync(string refreshToken)
@@ -216,6 +204,23 @@ public class UsuarioService : IUsuarioService
         return datosUsuarioDto;
     }
 
+
+
+    private RefreshToken CreateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+        using (var generator = RandomNumberGenerator.Create())
+        {
+            generator.GetBytes(randomNumber);
+            return new RefreshToken
+            {
+                Token = Convert.ToBase64String(randomNumber),
+                Expires = DateTime.UtcNow.AddDays(10),
+                Created = DateTime.UtcNow
+            };
+        }
+    }
+
     private JwtSecurityToken CreateJwtToken(Usuario usuario)
     {
         var roles = usuario.Roles;
@@ -226,11 +231,11 @@ public class UsuarioService : IUsuarioService
         }
         var claims = new[]
         {
-                            new Claim(JwtRegisteredClaimNames.Sub, usuario.Username),
-                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                            new Claim(JwtRegisteredClaimNames.Email, usuario.Email),
-                            new Claim("uid", usuario.Id.ToString())
-                    }
+                                new Claim(JwtRegisteredClaimNames.Sub, usuario.Username),
+                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                                new Claim(JwtRegisteredClaimNames.Email, usuario.Email),
+                                new Claim("uid", usuario.Id.ToString())
+                        }
         .Union(roleClaims);
         var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
         var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
@@ -243,5 +248,5 @@ public class UsuarioService : IUsuarioService
         return jwtSecurityToken;
     }
 
-    
+
 }
